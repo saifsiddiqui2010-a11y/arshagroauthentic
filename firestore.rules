@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net: Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == "saiftech15@gmail.com" ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    // 1. User Profiles (PII Protected)
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isAdmin();
+      allow create: if isOwner(userId) && incoming().userId == userId;
+      allow update: if (isOwner(userId) && incoming().userId == userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // 2. Products Catalog
+    match /products/{productId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // 3. Purchase Orders & Tracking
+    match /orders/{orderId} {
+      allow get: if true; // Public order & AWB milestone tracking lookup
+      allow list: if isAdmin() || (isSignedIn() && resource.data.userId == request.auth.uid);
+      allow create: if incoming().totalAmount is number && incoming().totalAmount > 0;
+      allow update, delete: if isAdmin();
+    }
+
+    // 4. Customer Reviews
+    match /reviews/{reviewId} {
+      allow get, list: if true;
+      allow create: if incoming().rating is number && incoming().rating >= 1 && incoming().rating <= 5;
+      allow update, delete: if isAdmin();
+    }
+
+    // 5. B2B Bulk Inquiries
+    match /bulk_inquiries/{inquiryId} {
+      allow get, list: if isAdmin();
+      allow create: if incoming().companyName is string && incoming().contactPerson is string;
+      allow update, delete: if isAdmin();
+    }
+
+    // 6. Admin Role Management
+    match /admins/{adminId} {
+      allow get: if isSignedIn();
+      allow list, create, update, delete: if isAdmin();
+    }
+  }
+}

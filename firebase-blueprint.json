@@ -1,0 +1,353 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User account and profile data",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "Firebase Auth user UID",
+          "maxLength": 128
+        },
+        "email": {
+          "type": "string",
+          "description": "User email address",
+          "maxLength": 128
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Customer full name",
+          "maxLength": 128
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "Profile avatar URL",
+          "maxLength": 512
+        },
+        "phone": {
+          "type": "string",
+          "description": "Customer mobile number",
+          "maxLength": 32
+        },
+        "role": {
+          "type": "string",
+          "description": "User access role",
+          "enum": ["customer", "admin"],
+          "maxLength": 32
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Profile creation timestamp",
+          "maxLength": 64
+        }
+      },
+      "required": ["userId", "email"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Mustard oil product and inventory item",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique product SKU or identifier",
+          "maxLength": 64
+        },
+        "name": {
+          "type": "string",
+          "description": "Product display title",
+          "maxLength": 150
+        },
+        "category": {
+          "type": "string",
+          "description": "Product category",
+          "maxLength": 64
+        },
+        "volume": {
+          "type": "string",
+          "description": "Net quantity or volume",
+          "maxLength": 64
+        },
+        "price": {
+          "type": "number",
+          "description": "Price in INR"
+        },
+        "originalPrice": {
+          "type": "number",
+          "description": "Original MRP price"
+        },
+        "stock": {
+          "type": "number",
+          "description": "Available stock count"
+        },
+        "sku": {
+          "type": "string",
+          "description": "Stock keeping unit",
+          "maxLength": 64
+        },
+        "image": {
+          "type": "string",
+          "description": "Image URL or asset path",
+          "maxLength": 512
+        },
+        "badge": {
+          "type": "string",
+          "description": "Promotional or purity badge",
+          "maxLength": 64
+        },
+        "pungencyLevel": {
+          "type": "number",
+          "description": "Mustard oil jhaanjh level (1-5)"
+        },
+        "description": {
+          "type": "string",
+          "description": "Product detailed description",
+          "maxLength": 2048
+        }
+      },
+      "required": ["id", "name", "price", "stock", "category"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer e-commerce purchase order",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Order reference code (e.g., AAG-89421)",
+          "maxLength": 64
+        },
+        "userId": {
+          "type": "string",
+          "description": "Auth UID of the ordering customer or 'guest'",
+          "maxLength": 128
+        },
+        "customerName": {
+          "type": "string",
+          "description": "Customer full name",
+          "maxLength": 128
+        },
+        "phone": {
+          "type": "string",
+          "description": "Customer phone number",
+          "maxLength": 32
+        },
+        "email": {
+          "type": "string",
+          "description": "Customer email",
+          "maxLength": 128
+        },
+        "address": {
+          "type": "string",
+          "description": "Shipping address",
+          "maxLength": 500
+        },
+        "city": {
+          "type": "string",
+          "description": "City",
+          "maxLength": 100
+        },
+        "state": {
+          "type": "string",
+          "description": "State",
+          "maxLength": 100
+        },
+        "pincode": {
+          "type": "string",
+          "description": "6-digit Indian PIN code",
+          "maxLength": 16
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "Final paid amount in INR"
+        },
+        "subtotal": {
+          "type": "number",
+          "description": "Item subtotal"
+        },
+        "shippingFee": {
+          "type": "number",
+          "description": "Shiprocket courier charge"
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "Payment gateway choice (razorpay or cod)",
+          "maxLength": 32
+        },
+        "paymentStatus": {
+          "type": "string",
+          "description": "Payment status (paid, pending, cod_pending)",
+          "maxLength": 32
+        },
+        "orderStatus": {
+          "type": "string",
+          "description": "Shipment fulfillment milestone",
+          "maxLength": 64
+        },
+        "shiprocketAWB": {
+          "type": "string",
+          "description": "Shiprocket airway bill tracking number",
+          "maxLength": 64
+        },
+        "courierPartner": {
+          "type": "string",
+          "description": "Assigned courier company",
+          "maxLength": 100
+        },
+        "estimatedDelivery": {
+          "type": "string",
+          "description": "Estimated delivery date",
+          "maxLength": 64
+        },
+        "date": {
+          "type": "string",
+          "description": "Order creation date string",
+          "maxLength": 64
+        }
+      },
+      "required": ["id", "customerName", "phone", "totalAmount", "paymentMethod", "orderStatus"]
+    },
+    "Review": {
+      "title": "Review",
+      "description": "Verified customer review and testimonial",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Review unique identifier",
+          "maxLength": 64
+        },
+        "author": {
+          "type": "string",
+          "description": "Customer reviewer name",
+          "maxLength": 128
+        },
+        "location": {
+          "type": "string",
+          "description": "Customer city/location",
+          "maxLength": 128
+        },
+        "productName": {
+          "type": "string",
+          "description": "Reviewed mustard oil product name",
+          "maxLength": 200
+        },
+        "rating": {
+          "type": "number",
+          "description": "Star rating 1 to 5"
+        },
+        "comment": {
+          "type": "string",
+          "description": "Review content text",
+          "maxLength": 1000
+        },
+        "highlight": {
+          "type": "string",
+          "description": "Headline highlight summary",
+          "maxLength": 150
+        },
+        "verifiedBuyer": {
+          "type": "boolean",
+          "description": "Verified purchaser badge"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date string",
+          "maxLength": 64
+        }
+      },
+      "required": ["id", "author", "rating", "comment", "productName"]
+    },
+    "BulkInquiry": {
+      "title": "BulkInquiry",
+      "description": "B2B commercial wholesale request for quote",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Inquiry identifier",
+          "maxLength": 64
+        },
+        "companyName": {
+          "type": "string",
+          "description": "Enterprise or business name",
+          "maxLength": 200
+        },
+        "contactPerson": {
+          "type": "string",
+          "description": "Purchasing contact name",
+          "maxLength": 128
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone / WhatsApp number",
+          "maxLength": 32
+        },
+        "email": {
+          "type": "string",
+          "description": "Contact email address",
+          "maxLength": 128
+        },
+        "city": {
+          "type": "string",
+          "description": "City",
+          "maxLength": 100
+        },
+        "state": {
+          "type": "string",
+          "description": "State",
+          "maxLength": 100
+        },
+        "requiredVolume": {
+          "type": "string",
+          "description": "Required liters per month",
+          "maxLength": 100
+        },
+        "packagingPreference": {
+          "type": "string",
+          "description": "Packaging format (15L Tin, 200L Drum, Tanker)",
+          "maxLength": 100
+        },
+        "status": {
+          "type": "string",
+          "description": "Inquiry handling status",
+          "maxLength": 64
+        },
+        "date": {
+          "type": "string",
+          "description": "Submission date string",
+          "maxLength": 64
+        },
+        "notes": {
+          "type": "string",
+          "description": "Specific requirements or comments",
+          "maxLength": 1000
+        }
+      },
+      "required": ["id", "companyName", "contactPerson", "phone", "requiredVolume"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile information"
+    },
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Product catalog and live stock documents"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Customer purchase orders and shipment tracking"
+    },
+    "/reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Public verified customer reviews"
+    },
+    "/bulk_inquiries/{inquiryId}": {
+      "schema": "BulkInquiry",
+      "description": "Commercial wholesale procurement inquiries"
+    }
+  }
+}
